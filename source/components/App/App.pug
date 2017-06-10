@@ -1,0 +1,16 @@
+include ../../../node_modules/bemto.pug/bemto
+
++b#app.page(:class="{'ui--white': getUiColor === 'white'}")
+  transition(
+    appear,
+    @enter="hookAppEnter"
+  )
+    +e.wrapper(v-if="appIsReady")
+      transition(
+        appear,
+        @enter="hookViewEnter",
+        @leave="hookViewLeave",
+        mode="out-in"
+      )
+        +e.inner(:key="$route.path")
+          router-view

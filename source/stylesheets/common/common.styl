@@ -1,0 +1,40 @@
+text-big()
+  font-size em(60)
+  line-height (80 / 60)
+  font-weight 600
+
+text-mid()
+  font-size em(20)
+  line-height (40 / 20)
+
+  +tablet()
+    font-size em(40)
+
+text-small()
+  font-size em(10)
+
+  +tablet()
+    font-size em(20)
+
+link-style()
+  add-area(60, 80)
+  color currentColor
+  line-height 1
+  transition opacity .2s ease, color .2s ease
+  opacity 1
+  background none
+  text-decoration none
+  cursor pointer
+  position relative
+  -webkit-tap-highlight-color transparent
+
+  &:hover
+    opacity .6
+
+  &:disabled
+    opacity .6
+    cursor default
+
+  &.router-link-active
+    opacity 1
+

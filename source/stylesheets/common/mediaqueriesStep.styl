@@ -1,0 +1,48 @@
+// MEDIA QUERIES VARIABLES
+
+// MEDIA QUERIES
+// +phone-only() +tablet() +tablet-only()
+// +desktop() +desktop-only() +xlarge() +xlarge-only() +xxlarge()
+
+// 0, 640px
+phone-only()
+  @media only screen and (max-width: 40em)
+    {block}
+phone()
+  @media only screen and (max-width: 40em)
+    {block}
+
+// 960px ...
+tablet()
+  @media only screen and (max-width: 60em)
+    {block}
+
+// 641px, 1024px
+tablet-only()
+  @media (min-width: 40.063em) and (max-width: 64em)
+    {block}
+
+// 960px ...
+desktop()
+  @media only screen and (min-width: 60em)
+    {block}
+
+// 1025px, 1440px
+desktop-only()
+  @media (min-width: 64.063em) and (max-width: 90em)
+    {block}
+
+// 1441px ...
+xlarge()
+  @media only screen and (min-width: 90.063em)
+    {block}
+
+// 1441px, 1920px
+xlarge-only()
+  @media (min-width: 90.063em) and (max-width: 120em)
+    {block}
+
+// 1921px ...
+xxlarge()
+  @media only screen and (min-width: 120.063em)
+    {block}

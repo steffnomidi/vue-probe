@@ -1,0 +1,8 @@
+include ../../../node_modules/bemto.pug/bemto
+
+transition(
+  appear,
+  @leave="hookViewLeave",
+  @enter="hookViewEnter"
+)
+  +b.home(v-if="dataPage") Home
