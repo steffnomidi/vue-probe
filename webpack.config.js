@@ -119,11 +119,12 @@ module.exports = {
 
   resolve: {
     alias: {
-      components: path.resolve(__dirname, './source/components'),
-      fonts: path.resolve(__dirname, './source/assets/fonts'),
-      helpers: path.resolve(__dirname, './source/helpers'),
-      images: path.resolve(__dirname, './source/assets/images'),
-      views: path.resolve(__dirname, './source/views'),
+      blocks: path.resolve(__dirname, 'source/stylesheets/blocks'),
+      components: path.resolve(__dirname, 'source/components'),
+      helpers: path.resolve(__dirname, 'source/helpers'),
+      fonts: path.resolve(__dirname, 'source/assets/fonts'),
+      images: path.resolve(__dirname, 'source/assets/images'),
+      views: path.resolve(__dirname, 'source/views'),
       vue$: 'vue/dist/vue.common.js'
     }
   },

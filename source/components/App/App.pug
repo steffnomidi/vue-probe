@@ -1,15 +1,23 @@
 include ../../../node_modules/bemto.pug/bemto
 
-+b#app.page(:class="{'ui--white': getUiColor === 'white'}")
++b.page(
+  id="app",
+  :class="{" +
+  "'page_ui_white': app.uiColor === 'white'," +
+  "'page_ui_black': app.uiColor === 'black'" +
+  "}"
+)
   transition(
     appear,
     @enter="hookAppEnter"
   )
-    +e.wrapper(v-if="appIsReady")
+    +e.wrapper(v-if="app.isReady")
+      headerModule(v-if="app.isReady")
+
       transition(
         appear,
-        @enter="hookViewEnter",
-        @leave="hookViewLeave",
+        @enter="fadeIn",
+        @leave="fadeOut",
         mode="out-in"
       )
         +e.inner(:key="$route.path")

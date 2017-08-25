@@ -1,13 +1,9 @@
-import {mapGetters} from 'vuex';
-
-import icon from 'components/icon/icon.vue';
+import {mapState, mapGetters, mapMutations} from 'vuex';
 
 export default {
   name: 'home',
 
-  components: {
-    icon
-  },
+  components: {},
 
   data() {
     return {
@@ -16,22 +12,32 @@ export default {
   },
 
   computed: {
+    ...mapState([
+      'commonData'
+    ]),
+
     ...mapGetters([
-      'getCommonData'
+      'isMobile'
     ])
   },
 
   watch: {},
 
   created: function () {
-    this.$http.get('/data/main.json').then(response => {
+    this.$http.get('home').then(response => {
       this.dataPage = response.body;
     });
+
+    this.setUiColor('white');
   },
 
   mounted: function () {},
 
   methods: {
+    ...mapMutations([
+      'setUiColor'
+    ]),
+
     hookViewEnter: function (el, done) {
       const tl = new TimelineMax({
         onComplete: done

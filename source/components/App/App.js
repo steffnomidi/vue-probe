@@ -1,55 +1,59 @@
-import {mapGetters, mapMutations} from 'vuex';
+import {mapState, mapGetters, mapMutations} from 'vuex';
 
-import calcFontBase from 'helpers/calcFontSizer';
+import headerModule from 'components/header/header.vue';
 
-import removeHover from 'remove-hover'
+import {fadeIn, fadeOut} from 'helpers/animations.js';
+import fontSizeHelper from 'helpers/fontSizeHelper';
+import throttle from 'helpers/throttle';
 
 export default {
-
-  components: {},
+  components: {
+    headerModule
+  },
 
   data() {
-    return {};
+    return {
+      fadeIn: fadeIn,
+      fadeOut: fadeOut
+    };
   },
 
   computed: {
+    ...mapState([
+      'app'
+    ]),
+
     ...mapGetters([
-      'appIsReady',
-      'isMobile',
-      'getUiColor'
+      'isMobile'
     ])
   },
 
   watch: {},
 
   created: function () {
-    this.$http.get('/data/common.json').then(response => {
+    this.$http.get('common').then(response => {
       this.setCommonData(response.body);
     });
-
-    removeHover();
   },
 
   mounted: function () {
-    calcFontBase.update();
+    this.setLayoutType();
+    this.setFontSize(fontSizeHelper.update(this.app.currentLayout));
 
-    this.setDeviceType();
-
-
-    window.addEventListener('resize', () => {
-      calcFontBase.update();
-      this.setDeviceType();
-    });
+    const onWindowResize = throttle(() => {
+      this.setLayoutType();
+      this.setFontSize(fontSizeHelper.update(this.app.currentLayout));
+    }, 100);
 
     document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        this.setAppReady(true);
-      }, 300);
+      this.setAppReady(true);
     });
 
     window.onload = () => {
       this.setAppLoad(true);
     };
+
+    window.addEventListener('resize', onWindowResize);
   },
 
   methods: {
@@ -57,16 +61,20 @@ export default {
       'setAppReady',
       'setAppLoad',
       'setCommonData',
-      'setCurrentDevice'
+      'setCurrentLayout',
+      'setFontSize'
     ]),
 
-    setDeviceType: function () {
-        const mqMobile = window.matchMedia('only screen and (max-width: 40em)');
+    setLayoutType: function () {
+      const mqMobile = window.matchMedia('only screen and (max-width: 40em)');
+      const mqTablet = window.matchMedia('only screen and (max-width: 75em)');
 
       if (mqMobile.matches) {
-        this.setCurrentDevice('desktop');
+        this.setCurrentLayout('mobile');
+      } else if (mqTablet.matches) {
+        this.setCurrentLayout('tablet');
       } else {
-        this.setCurrentDevice('mobile');
+        this.setCurrentLayout('desktop');
       }
     },
 
@@ -74,21 +82,7 @@ export default {
       const tl = new TimelineLite({onComplete: done});
 
       tl.set(el, {opacity: '0'})
-        .to(el, .3, {opacity: '1', clearProps: 'all', ease: Sine.easeOut}, '+=.3');
-    },
-
-    hookViewEnter(el, done) {
-      const tl = new TimelineLite({onComplete: done});
-
-      tl.set(el, {opacity: '0'})
-        .to(el, .3, {opacity: '1', clearProps: 'all', ease: Sine.easeOut});
-    },
-
-    hookViewLeave(el, done) {
-      const tl = new TimelineLite({onComplete: done});
-
-      tl.set(el, {opacity: '1'})
-        .to(el, .3, {opacity: '0', ease: Sine.easeOut});
+        .to(el, .3, {opacity: '1', clearProps: 'opacity'}, '+=.3');
     }
   }
 };
