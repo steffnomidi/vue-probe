@@ -38,6 +38,21 @@ _convert-to-em($px, $base)
   else
     return 0
 
+rem($value, $base = $base-font-size)
+  $max = length($value)
+
+  $remValues = ()
+  for $i in (0...$max)
+    push($remValues, _convert-to-rem($value[$i], $base))
+
+  return $remValues
+
+_convert-to-rem($px, $base)
+  if ((unit($px) == '' || unit($px) == 'px') && ($px != 0))
+    return (round($px / $base, 3)) rem
+  else
+    return 0
+
 // background images + size
 bgContainer(img)
   width image-size(img)[0]

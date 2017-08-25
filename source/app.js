@@ -4,6 +4,7 @@ import VeeValidate, {Validator} from 'vee-validate';  // eslint-disable-line
 import VueResource from 'vue-resource';
 
 import App from 'components/App/App.vue';
+import mocks from './mocks';
 import router from './router';
 import store from './store';
 
@@ -18,14 +19,45 @@ require('webpack-svgstore-plugin/src/helpers/svgxhr')(__svg__);
 
 Vue.use(VueTouch, {name: 'vtouch'});
 Vue.use(VueResource);
+Vue.url.options.root = '/api';
 
 Vue.use(VeeValidate, {
   locale: 'en'
 });
 
-if (NODE_ENV === 'production') {
+if (NODE_ENV !== 'development') {
   Vue.config.silent = true;
   Vue.config.devtools = false;
+}
+
+if (NODE_ENV === 'development') {
+  Vue.http.interceptors.unshift((request, next) => {
+    const route = mocks.find(item => {
+      if (request.method === item.method && request.url === item.url) {
+        if (item.params) {
+          const hasAllParams = Object.keys(item.params).every(param => {
+            return item.params[param] === request.params[param];
+          });
+          return hasAllParams;
+        }
+        return true;
+      }
+      return false;
+    });
+
+    if (!route) {
+      // Предотвращаем реальный http запрос
+      next(request.respondWith({status: 404, statusText: 'Not found!'}));
+    } else {
+      const response = typeof route.response === 'function' ? route.response(request) : route.response;
+      next(
+        request.respondWith(
+          response,
+          {status: 200}
+        )
+      );
+    }
+  });
 }
 
 router.afterEach((to, from) => { // eslint-disable-line
@@ -40,9 +72,6 @@ router.afterEach((to, from) => { // eslint-disable-line
   addTitle = addTitle.length ? ` — ${addTitle.join(' — ')}` : '';
 
   document.title = `Title${addTitle}`;
-
-  // reset ui to default
-  store.commit('setUiColor', 'white');
 });
 
 const app = new Vue(Vue.util.extend({
