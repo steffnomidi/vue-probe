@@ -4111,10 +4111,6 @@ relateurl@0.2.x:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
 
-remove-hover@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/remove-hover/-/remove-hover-0.1.0.tgz#84f7eef6b905286f4ba2c28972f4f453a800d16c"
-
 remove-trailing-separator@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.0.2.tgz#69b062d978727ad14dc6b56ba4ab772fd8d70511"
@@ -4419,6 +4415,10 @@ sockjs@^0.3.15:
   dependencies:
     faye-websocket "^0.10.0"
     uuid "^2.0.2"
+
+sort-css-media-queries@^1.1.20:
+  version "1.1.20"
+  resolved "https://registry.yarnpkg.com/sort-css-media-queries/-/sort-css-media-queries-1.1.20.tgz#15b7d20768fb5fce7f0de6f9ed284ad3f7d10a7a"
 
 sort-keys@^1.0.0:
   version "1.1.2"

@@ -12,22 +12,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SvgStore = require('webpack-svgstore-plugin');
 
-let styleLoader;
-if (NODE_ENV === 'development') {
-  styleLoader = {
-    test: /\.styl$/,
-    loader: 'style!css!postcss!stylus?resolve url'
-  };
-} else {
-  styleLoader = {
-    test: /\.styl$/,
-    loader: ExtractTextPlugin.extract('css!postcss!stylus?resolve url')
-  };
-}
-// const extractCSS = new ExtractTextPlugin('css/[name].css');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const mqpacker = require('css-mqpacker');
+const sortCSSmq = require('sort-css-media-queries');
 
 module.exports = {
   context: path.resolve(__dirname, 'source'), // указываем относительно какой папки будет идти сборка (контекст запуска)
@@ -80,7 +68,7 @@ module.exports = {
       }
     ]),
 
-    new ExtractTextPlugin('app.css', {
+    new ExtractTextPlugin('[id].[contenthash].css', {
       allChunks: true
     }),
 
@@ -139,7 +127,9 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        include: [
+          path.join(__dirname, './source')
+        ],
         loader: 'babel',
         query: {
           presets: ['es2015']
@@ -164,8 +154,10 @@ module.exports = {
           pretty: NODE_ENV === 'development'
         }
       },
-
-      styleLoader
+      {
+        test: /\.styl$/,
+        loader: ExtractTextPlugin.extract('css!postcss!stylus?resolve url')
+      }
     ]
   },
 
@@ -177,7 +169,9 @@ module.exports = {
 
   vue: {
     loaders: {
-      js: 'babel?presets[]=es2015'
+      js: 'babel?presets[]=es2015',
+      css: ExtractTextPlugin.extract('css!postcss'),
+      stylus: ExtractTextPlugin.extract('css!postcss!stylus?resolve url')
     }
   },
 
@@ -187,7 +181,7 @@ module.exports = {
     ];
     if (NODE_ENV === 'production') {
       option = option.concat([
-        mqpacker({sort: true}),
+        mqpacker({sort: sortCSSmq}),
         cssnano({
           zindex: false
         })
@@ -199,14 +193,18 @@ module.exports = {
   }
 };
 
-if (NODE_ENV === 'production') {
+if (NODE_ENV !== 'development') {
   module.exports.plugins.push(
     new webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false,
-        drop_console: true, // eslint-disable-line
-        unsafe: true
+        drop_console: NODE_ENV === 'production', // eslint-disable-line
+        unsafe: true,
+        warnings: false
+      },
+      output: {
+        comments: false
       }
     })
   );
 }
+
