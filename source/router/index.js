@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import contacts from 'views/contacts/contacts.vue';
-import home from 'views/home/home.vue';
+const contacts = resolve => require(['views/contacts/contacts.vue'], resolve);
+const home = resolve => require(['views/home/home.vue'], resolve);
 
 Vue.use(Router);
 
