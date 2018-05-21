@@ -1,12 +1,12 @@
 include ../../../node_modules/bemto.pug/bemto
 
 +b.contacts Contacts
-  +e.A.link(
-    v-for="(item, index) in commonData.socials",
-    v-if="item",
-    :href="item",
-    target="_blank",
-    rel="nofollow",
-    :key="index"
-  )
-    icon(:id="index")
+  ul
+    li( v-for="(item, index) in commonData.socials", v-if="item")
+        a.link(
+          :href="item",
+          target="_blank",
+          rel="nofollow",
+          :key="index"
+        )
+          icon(:id="index")
